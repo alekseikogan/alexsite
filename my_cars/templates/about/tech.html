@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="ru"> 
-  <head>    
-    <meta charset="utf-8"> 
-    <title>
-          Технологии
-    </title>
-  </head>
-<body>
+{% extends "base.html" %}
+{% block content %}
+<h1>
+  {{title}}
+</h1>
 <div class="container py-5">
   <div class="row">
     <h1>Вот что я умею</h1>
@@ -34,5 +30,4 @@
   </article>
 </div>
 </div> 
-</body>
-</html>
+{% endblock %}

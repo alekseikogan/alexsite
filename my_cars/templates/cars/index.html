@@ -3,16 +3,28 @@
 <h1>
   {{title}}
 </h1>
-<p> Мои случаные 5 машин </p>
-<ul>
-  {% for car in cars %}
+<p> Мои случайные 5 машин </p>
+<ul class="list-articles">
+{% for car in cars %}
+  {% if car.photo %}
+	  <p><img class="img-article-left thumb" src="{{car.photo.url}}"></p>
+    
+  {% endif %}
     <li>
       <h2> {{car.mark}} {{car.model}} </h2>
       <p> Тип кузова: {{car.body}} </p>
       <p> Комплектация: {{car.complect}} </p>
       <p> Год: {{car.year}} </p>
-      <p> О машине: {{car.description}} </p>
-    </li> 
+      {% autoescape on %}
+      <p> {{car.description|linebreaks|truncatewords:45}} </p>
+      {% endautoescape %}
+      <div class="clear"></div>
+			<p class="link-read-post">
+        <a href="{{ car.get_absolute_url }}">
+        Читать полностью
+        </a>
+      </p>
+		</li>
   {% endfor %}
 </ul>
 {% endblock %}
