@@ -13,7 +13,7 @@ menu = [
 
 
 def index(request):
-    cars = Car.objects.all()
+    cars = Car.objects.order_by('?')[:5]
     marks = Mark.objects.all()
     context = {
             'menu': menu,
