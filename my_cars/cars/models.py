@@ -1,5 +1,3 @@
-import datetime
-
 from django.db import models
 from django.urls import reverse
 
@@ -82,8 +80,9 @@ class Car(models.Model):
         verbose_name='Кузов',
         help_text='Кузов автомобиля'
     )
-    description = models.TextField(null=True, blank=True)
-    year = models.IntegerField(default=datetime.date.today().year)
+    description = models.TextField(
+        null=True, blank=True, verbose_name='Описание')
+    year = models.IntegerField(verbose_name='Год')
     photo = models.ImageField(
         upload_to='photos/%Y/%m/%d/',
         verbose_name='Фото',)

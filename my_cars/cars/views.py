@@ -1,6 +1,8 @@
-from django.http import Http404, HttpResponse, HttpResponseNotFound
-from django.shortcuts import render, get_object_or_404
-from pytest import mark
+from ast import Add
+from django.http import Http404, HttpResponseNotFound
+from django.shortcuts import render, get_object_or_404, redirect
+
+from .forms import AddCarForm
 
 from .models import Car, Mark
 
@@ -58,7 +60,18 @@ def show_mark(request, mark_slug):
 
 
 def addcar(request):
-    return HttpResponse('<h1>Добавление автомобиля</h1>')
+    if request.method == 'POST':
+        form = AddCarForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('home')
+    else:
+        form = AddCarForm()
+    context = {
+            'title': 'Добавление автомобиля',
+            'menu': menu,
+            'form': form}
+    return render(request, 'cars/addcar.html', context)
 
 
 def about(request):
