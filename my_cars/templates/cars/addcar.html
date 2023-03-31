@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>
- {{title}}
+ {{title_low}}
 </h1>
 <form action="{% url 'addcar' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}

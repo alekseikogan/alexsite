@@ -1,13 +1,15 @@
 from django.urls import path
 
-from cars.views import index, about, addcar, login, tech, show_car, show_mark
+from cars.views import (
+    about, login, tech, CarHome, MarkList, ShowCar, AddCar
+    )
 
 urlpatterns = [
-    path('', index, name='home'),
+    path('', CarHome.as_view(), name='home'),
     path('about/', about, name='about'),
-    path('addcar/', addcar, name='addcar'),
+    path('addcar/', AddCar.as_view(), name='addcar'),
     path('login/', login, name='login'),
     path('tech/', tech, name='tech'),
-    path('cars/<slug:car_slug>/', show_car, name='show_car'),
-    path('mark/<slug:mark_slug>/', show_mark, name='show_mark'),
+    path('cars/<slug:car_slug>/', ShowCar.as_view(), name='show_car'),
+    path('mark/<slug:mark_slug>/', MarkList.as_view(), name='show_mark'),
 ]
