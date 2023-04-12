@@ -19,13 +19,10 @@
 	</a>
 
 {% for m in menu %}
-	{% if not forloop.last %}
-		<li><a href="{% url m.url_name %}">{{m.title}}</a></li>
-	{% else %}
-		<li class="last"><a href="{% url m.url_name%}">{{m.title}}</a></li>
-	{% endif %}
+	<li><a href="{% url m.url_name %}">{{m.title}}</a></li>
 {% endfor %}
-		</ul>
+	<li class="last"><a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a></li>
+	</ul>
 <div class="clear"></div>
 </div>
 {% endblock mainmenu %}

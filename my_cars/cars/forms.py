@@ -1,9 +1,10 @@
 import datetime
 
 from django import forms
+from django.contrib.auth.forms import UserCreationForm
 from django.core.exceptions import ValidationError
 
-from .models import Car
+from .models import Car, User 
 
 
 class AddCarForm(forms.ModelForm):
@@ -26,3 +27,20 @@ class AddCarForm(forms.ModelForm):
         if year > datetime.datetime.today().year:
             raise ValidationError('Год не может быть больше текущего!')
         return year
+
+
+class RegisterUserForm(UserCreationForm):
+    username = forms.CharField(
+        label='Логин', widget=forms.TextInput(attrs={'class': 'form-input'}))
+    email = forms.EmailField(
+        label='Email', widget=forms.EmailInput(attrs={'class': 'form-input'}))
+    password1 = forms.CharField(
+        label='Пароль', widget=forms.PasswordInput(
+            attrs={'class': 'form-input'}))
+    password2 = forms.CharField(
+        label='Повтор пароля', widget=forms.PasswordInput(
+            attrs={'class': 'form-input'}))
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password1', 'password2')
