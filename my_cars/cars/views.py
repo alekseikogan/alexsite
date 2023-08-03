@@ -1,9 +1,9 @@
-from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.views import LoginView
 from django.http import HttpResponseNotFound
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView, DetailView, ListView
+from django.contrib.auth import logout, login
 
 from .forms import AddCarForm, LoginUserForm, RegisterUserForm
 from .models import Car, Mark
@@ -35,7 +35,7 @@ class CarHome(ListView):
         return context
 
     def get_queryset(self):
-        return Car.objects.all()
+        return Car.objects.select_related('mark', 'body').all()
 
 
 class MarkList(ListView):
@@ -57,7 +57,7 @@ class MarkList(ListView):
         return context
 
     def get_queryset(self):
-        return Car.objects.filter(mark__slug=self.kwargs['mark'])
+        return Car.objects.filter(mark__slug=self.kwargs['mark']).select_related('body', 'mark')
 
 
 class ShowCar(DetailView):
@@ -69,7 +69,10 @@ class ShowCar(DetailView):
     def get_context_data(self, *, object_list=None, **kwargs):
         '''Создание динамического контекста'''
         context = super().get_context_data(**kwargs)
-        current_car = get_object_or_404(Car, slug=self.kwargs['car'])
+        current_car = get_object_or_404(
+            Car.objects.select_related('body', 'mark'),
+            slug=self.kwargs['car']
+        )
         context['title_up'] = f'{str(current_car.mark)} {str(current_car.model)}'
         context['title_low'] = f'{str(current_car.mark)} {str(current_car.model)}'
         context['menu'] = menu
@@ -94,7 +97,7 @@ class AddCar(CreateView):
 
 
 def about(request):
-    marks = Mark.objects.all() 
+    marks = Mark.objects.all()
     context = {
         'title': 'Об авторе',
         'menu': menu,
@@ -132,6 +135,11 @@ class RegisterUser(CreateView):
         context['marks'] = marks
         return context
 
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)
+        return redirect('home')
+
 
 class LoginUser(LoginView):
     form_class = LoginUserForm
@@ -149,3 +157,8 @@ class LoginUser(LoginView):
 
     def get_success_url(self):
         return reverse_lazy('home')
+
+
+def logout_user(request):
+    logout(request)
+    return redirect('login')
